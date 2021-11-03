@@ -1,8 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#define NUMBER_OF_FILTERS 5
-#define SQL_RETURN_LEN 1000
+
 
 #include <QMainWindow>
 #include <QGraphicsItem>
@@ -22,6 +21,8 @@
 #include "Filters.h"
 #include "GameContainer.h"
 
+constexpr int NUMBER_OF_FILTERS = 5;
+constexpr int SQL_RETURN_LEN = 1000;
 
 namespace Ui {
 class MainWindow;

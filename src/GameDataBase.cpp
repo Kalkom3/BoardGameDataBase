@@ -22,13 +22,13 @@ GameDataBase::GameDataBase()
 
 void GameDataBase::GetGames(std::vector<Game>resoult,int com,int rand,int inter,int time,int players)
 {
-    int demands[5] = { com, rand, inter, time, players};
+    int demands[NUMBER_OF_DEMANDS] = { com, rand, inter, time, players};
     int demandCnt=0;
     bool whereSet=false;
     QSqlQuery query;
     QString command;
     command="SELECT game_name FROM games";
-    for(int i=0;i<4;i++)
+    for(int i=0;i<NUMBER_OF_DEMANDS-1;i++)
     {
         if(demands[i]!=(-1))
         {
@@ -83,12 +83,13 @@ std::vector<Game*> GameDataBase::GetAllGames()
 }
 
 
-void GameDataBase::ModifyGame(int id, int com, int rand, int inter, int time, int players)
+void GameDataBase::ModifyGame(int id,int com,int rand,int inter,int time,int min_pl,int max_pl)
 {
     QSqlQuery query;
     QString command;
     command=QString("UPDATE games SET complexity=%1 ,randomness=%2, interaction=%3, "
-            "game_time=%4 WHERE game_id=%5").arg(com).arg(rand).arg(inter).arg(time).arg(id);
+            "game_time=%4, min_players=%5, max_palyers=%6 WHERE game_id=%7").arg(com).arg(rand).arg(inter).arg(time)
+            .arg(min_pl).arg(max_pl).arg(id);
     qDebug()<<command;
     query.exec(command);
 }

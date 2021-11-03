@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "EditGameView.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -75,7 +76,9 @@ void MainWindow::on_clearFiltersButton_clicked()
 
 void MainWindow::on_addButton_clicked()
 {
-    addGameWindow = new AddGameView();
-    addGameWindow->exec();
+    EditGameView* editDialog = new EditGameView();
+    editDialog->exec();
+    //addGameWindow = new AddGameView();
+    //addGameWindow->exec();
 
 }

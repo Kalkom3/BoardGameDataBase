@@ -14,7 +14,7 @@
 #include <QGraphicsScene>
 #include <vector>
 
-#include "GameView.h"
+#include "EditGameView.h"
 
 
 
@@ -23,7 +23,7 @@ class Game
 
 public:
     Game(QString _name,int _complexity,int _randomness,int _interaction, int _time, int _minPlayers, int _maxPlayers) ;
-    GameView* gameWindow;
+    EditGameView* gameWindow;
     QPushButton* activateButton;
     QImage* image[4];
     QGraphicsTextItem* labels[4]={new QGraphicsTextItem,new QGraphicsTextItem,new QGraphicsTextItem,new QGraphicsTextItem};
@@ -31,7 +31,7 @@ public:
     std::vector<QGraphicsItem*>gitem;
     QString name;
     int pos[2];
-    std::vector<int>properties;//complexity, randomness, interaction, time
+    std::vector<int>properties;//complexity, randomness, interaction, time, min PL, max PL
     bool paramChanged;
     int minPlayers;
     int maxPlayers;

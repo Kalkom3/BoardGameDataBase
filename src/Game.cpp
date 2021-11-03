@@ -28,6 +28,8 @@ Game::Game(QString _name,int _complexity,int _randomness,int _interaction, int _
     properties.push_back(_randomness);
     properties.push_back(_interaction);
     properties.push_back(_time);
+    properties.push_back(_minPlayers);
+    properties.push_back(_maxPlayers);
 
     labels[0]->setPlainText("Complexity:");
     labels[1]->setPlainText("Randomness:");
@@ -82,13 +84,12 @@ void Game::openGameView(bool isModal)
         images.push_back(*image[i]);
     }
     bool tempParamChanged;
-    gameWindow = new GameView(gitem,properties,&tempParamChanged);
+    gameWindow = new EditGameView(gitem,properties,&tempParamChanged);
     gameWindow->exec();
     if(tempParamChanged==true)
     {
-        qDebug()<<properties[0];
-        qDebug()<<properties[1];
-        qDebug()<<properties[2];
+        qDebug()<<properties[4];
+        qDebug()<<properties[5];
         checkParams();
     }
 
@@ -123,7 +124,7 @@ void Game::setNewPos(int nr)
     gitem[0]->setPos(pos[0],pos[1]+20);
     gitem[1]->setPos(pos[0],pos[1]+225);
     gitem[2]->setPos(pos[0],pos[1]+280);
-    gitem[3]->setPos(pos[0],pos[1]+335);
+    gitem[3]->setPos(pos[0],pos[1]+330);
 }
 
 Game::~Game()

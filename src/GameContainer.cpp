@@ -46,6 +46,8 @@ void Game_container::show()
         for(int j=0;j<8;j++)
         {
             gScene->addItem(gamesToShow[i]->gitem[j]);
+            //qDebug()<<i<<","<<j<<":";
+            //qDebug()<<gamesToShow[i]->gitem[j]->pos();
         }
         for(int j=0;j<gameButtons.size();j++)
         {
@@ -110,7 +112,7 @@ void Game_container::applyFilter()
                 }
                 else
                 {
-                    if(gamesFilter.properties[j]<games[i]->minPlayers || gamesFilter.properties[j]>games[i]->maxPlayers)
+                    if(gamesFilter.properties[j]<games[i]->properties[j] || gamesFilter.properties[j]>games[i]->properties[j+1])
                     {
                         filterOK=false;
                         break;
@@ -149,7 +151,8 @@ void Game_container::refGame()
 
             }
             db->ModifyGame(i+1,gamesToShow[i]->properties[0],gamesToShow[i]->properties[1],
-                    gamesToShow[i]->properties[2],gamesToShow[i]->properties[3],0);
+                    gamesToShow[i]->properties[2],gamesToShow[i]->properties[3],gamesToShow[i]->properties[4],
+                    gamesToShow[i]->properties[5]);
             break;
         }
     }

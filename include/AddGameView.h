@@ -9,11 +9,13 @@
 #include <QSlider>
 #include <QLabel>
 
+#include "GameView.h"
+
 namespace Ui {
 class AddGameView;
 }
 
-class AddGameView : public QDialog
+class AddGameView : public GameView
 {
     Q_OBJECT
 
@@ -21,11 +23,11 @@ public:
     explicit AddGameView(QWidget *parent = nullptr);
     ~AddGameView();
 
+protected slots:
+    virtual void on_editButton_clicked();
+
 private:
     QGraphicsScene *scene;
-    QSlider* sliders[4];
-    QLabel* sLabels[4];
-    Ui::AddGameView *ui;
 };
 
 #endif // ADDGAMEVIEW_H

@@ -8,13 +8,15 @@
 
 #include "Game.h"
 
+constexpr int NUMBER_OF_DEMANDS = 5;
+
 class GameDataBase
 {
 public:
     QSqlDatabase dataBase;
 
-    QString demandName[5];
-    void ModifyGame(int id,int com,int rand,int inter,int time,int players);
+    QString demandName[NUMBER_OF_DEMANDS];
+    void ModifyGame(int id,int com,int rand,int inter,int time,int min_pl,int max_pl);
     void GetGames(std::vector<Game>resoult,int com,int rand,int inter,int time,int players);
     std::vector<Game*> GetAllGames();
     GameDataBase();

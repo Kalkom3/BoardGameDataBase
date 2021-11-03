@@ -1,11 +1,16 @@
 #include "AddGameView.h"
-#include "ui_Addgameview.h"
+#include "ui_Gameview.h"
 
 AddGameView::AddGameView(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::AddGameView)
+    GameView(parent)
 {
-    ui->setupUi(this);
+    ui->delButton->hide();
+}
+
+
+void AddGameView::on_editButton_clicked()
+{
+
 }
 
 AddGameView::~AddGameView()

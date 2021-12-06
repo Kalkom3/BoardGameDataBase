@@ -42,23 +42,25 @@ void Game_container::show()
 {
     for(int i=0;i<gamesToShow.size();i++)
     {
-        gamesToShow[i]->setNewPos(i);
-        for(int j=0;j<8;j++)
+        if(gamesToShow[i]->isVisible==false)
         {
-            gScene->addItem(gamesToShow[i]->gitem[j]);
-            //qDebug()<<i<<","<<j<<":";
-            //qDebug()<<gamesToShow[i]->gitem[j]->pos();
-        }
-        for(int j=0;j<gameButtons.size();j++)
-        {
-            if(gameButtons[j].nr==gamesToShow[i]->nr)
+            gamesToShow[i]->setNewPos(i);
+            for(int j=0;j<8;j++)
             {
-                if(gameButtons[j].proxy==nullptr)
-                {
-                    gameButtons[j].proxy=gScene->addWidget(gamesToShow[i]->activateButton);
-                }
-                gameButtons[j].proxy->show();
+                gScene->addItem(gamesToShow[i]->gitem[j]);
             }
+            for(int j=0;j<gameButtons.size();j++)
+            {
+                if(gameButtons[j].nr==gamesToShow[i]->nr)
+                {
+                    if(gameButtons[j].proxy==nullptr)
+                    {
+                        gameButtons[j].proxy=gScene->addWidget(gamesToShow[i]->activateButton);
+                    }
+                    gameButtons[j].proxy->show();
+                }
+            }
+            gamesToShow[i]->isVisible=true;
         }
 
     }
@@ -72,16 +74,26 @@ void Game_container::show()
  */
 void Game_container::hide()
 {
+
     for(int i=0;i<gamesToShow.size();i++)
     {
-        for(int j=0;j<8;j++)
+        if(gamesToShow[i]->isVisible==true)
         {
-            gScene->removeItem(gamesToShow[i]->gitem[j]);
+            for(int j=0;j<8;j++)
+            {
+                gScene->removeItem(gamesToShow[i]->gitem[j]);
+            }
+            for(int j=0;j<gameButtons.size();j++)
+            {
+                if(gameButtons[j].nr==gamesToShow[i]->nr)
+                {
+                    gameButtons[j].proxy->hide();
+                }
+
+            }
+            gamesToShow[i]->isVisible=false;
         }
-        for(int j=0;j<gameButtons.size();j++)
-        {
-            gameButtons[j].proxy->hide();
-        }
+
     }
 }
 
@@ -118,9 +130,7 @@ void Game_container::applyFilter()
                         break;
                     }
                 }
-
             }
-
         }
         if(filterOK==true)
         {
@@ -150,7 +160,7 @@ void Game_container::refGame()
                 gScene->addItem(gamesToShow[i]->gitem[j]);
 
             }
-            db->ModifyGame(i+1,gamesToShow[i]->properties[0],gamesToShow[i]->properties[1],
+            db->ModifyGame(gamesToShow[i]->name,i+1,gamesToShow[i]->properties[0],gamesToShow[i]->properties[1],
                     gamesToShow[i]->properties[2],gamesToShow[i]->properties[3],gamesToShow[i]->properties[4],
                     gamesToShow[i]->properties[5]);
             break;

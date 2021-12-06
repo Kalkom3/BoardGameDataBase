@@ -1,5 +1,5 @@
 #include "mainwindow.h"
-#include "EditGameView.h"
+#include "AddGameView.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -49,7 +49,6 @@ void MainWindow::init()
 
 void MainWindow::on_horizontalSlider_valueChanged(int value)
 {
-
     for(int i=0;i<NUMBER_OF_PROPERTIES;i++)
     {
         container->gamesFilter.setFilter(*sliders[i],*labels[i]);
@@ -76,9 +75,13 @@ void MainWindow::on_clearFiltersButton_clicked()
 
 void MainWindow::on_addButton_clicked()
 {
-    EditGameView* editDialog = new EditGameView();
-    editDialog->exec();
-    //addGameWindow = new AddGameView();
-    //addGameWindow->exec();
+    AddGameView* addGameDialog = new AddGameView();
+    connect(addGameDialog,&AddGameView::saveGame,this,[&](propertiesStruct properties){
+        container->db->AddGame(container->games.size()+1,properties);
+        Game* game=new Game(properties);
+        container->add_game(game);
+        container->show();
+    });
+    addGameDialog->exec();
 
 }

@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "EditGameView.h"
 int Game::g_nr=0;
 Game::Game(QString _name,int _complexity,int _randomness,int _interaction, int _time, int _minPlayers, int _maxPlayers)
 {
@@ -84,7 +85,8 @@ void Game::openGameView(bool isModal)
         images.push_back(*image[i]);
     }
     bool tempParamChanged;
-    gameWindow = new EditGameView(gitem,properties,&tempParamChanged);
+    EditGameView * gameWindow = new EditGameView(this,&tempParamChanged);
+    //connect(gameWindow,&EditGameView::saveChanges,this,[&](){tempParamChanged=true;});
     gameWindow->exec();
     if(tempParamChanged==true)
     {
@@ -99,6 +101,8 @@ void Game::checkParams()
 {
     QString fname = __FILE__;
     fname.chop(12);
+    labels[3]->setPlainText(name);
+
     for(int i=0;i<3;i++)
     {
         QImage* newImg = new QImage(fname+"resources/stars("+(char)(properties[i]+48)+").png");
@@ -109,6 +113,8 @@ void Game::checkParams()
     }
     paramChanged=true;
 }
+
+
 
 void Game::setNewPos(int nr)
 {

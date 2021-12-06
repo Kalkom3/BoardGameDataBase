@@ -22,19 +22,13 @@ class Game
 {
 
 public:
-    Game(QString _name,int _complexity,int _randomness,int _interaction, int _time, int _minPlayers, int _maxPlayers) ;
-    EditGameView* gameWindow;
+    Game(propertiesStruct _properties);
     QPushButton* activateButton;
-    QImage* image[4];
-    QGraphicsTextItem* labels[4]={new QGraphicsTextItem,new QGraphicsTextItem,new QGraphicsTextItem,new QGraphicsTextItem};
-    QGraphicsPixmapItem* stars[3];
+    bool isVisible;
     std::vector<QGraphicsItem*>gitem;
     QString name;
-    int pos[2];
-    std::vector<int>properties;//complexity, randomness, interaction, time, min PL, max PL
+    std::vector<int>properties;//complexity, randomness, interaction, time, min PL, max PL, name
     bool paramChanged;
-    int minPlayers;
-    int maxPlayers;
     int nr;
     static int g_nr;
 

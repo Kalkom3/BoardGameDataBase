@@ -1,15 +1,28 @@
 #include "Game.h"
 #include "EditGameView.h"
 int Game::g_nr=0;
-Game::Game(QString _name,int _complexity,int _randomness,int _interaction, int _time, int _minPlayers, int _maxPlayers)
+Game::Game(propertiesStruct _properties)
 {
     nr=g_nr;
     g_nr++;
-    name=_name;
-    maxPlayers=_maxPlayers;
-    minPlayers=_minPlayers;
+    name=_properties.name;
+
+    for(int i=0;i<6;i++)
+    {
+        properties.push_back(_properties.numericVal[i]);
+    }
+
+    init();
+
+
+
+}
+
+void Game::init()
+{
 
     paramChanged=false;
+    isVisible=false;
 
     QFont font;
     font.setBold(1);
@@ -23,14 +36,6 @@ Game::Game(QString _name,int _complexity,int _randomness,int _interaction, int _
     activateButton=new QPushButton(buttonTxt);
     activateButton->setGeometry(QRect(pos[0],pos[1],20,20));
     activateButton->setFixedSize(20,20);
-
-
-    properties.push_back(_complexity);
-    properties.push_back(_randomness);
-    properties.push_back(_interaction);
-    properties.push_back(_time);
-    properties.push_back(_minPlayers);
-    properties.push_back(_maxPlayers);
 
     labels[0]->setPlainText("Complexity:");
     labels[1]->setPlainText("Randomness:");
@@ -74,8 +79,8 @@ Game::Game(QString _name,int _complexity,int _randomness,int _interaction, int _
     gitem[1]->setPos(pos[0],pos[1]+225);
     gitem[2]->setPos(pos[0],pos[1]+280);
     gitem[3]->setPos(pos[0],pos[1]+335);
-}
 
+}
 
 void Game::openGameView(bool isModal)
 {
@@ -90,8 +95,6 @@ void Game::openGameView(bool isModal)
     gameWindow->exec();
     if(tempParamChanged==true)
     {
-        qDebug()<<properties[4];
-        qDebug()<<properties[5];
         checkParams();
     }
 

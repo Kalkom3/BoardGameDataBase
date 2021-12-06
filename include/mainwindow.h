@@ -14,6 +14,7 @@
 #include <QCheckBox>
 #include <QEvent>
 
+#include "PropertiesStruct.h"
 #include "AddGameView.h"
 #include "GameDataBase.h"
 #include "ui_mainwindow.h"

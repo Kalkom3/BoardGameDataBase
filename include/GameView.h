@@ -8,6 +8,8 @@
 #include <vector>
 #include <QSlider>
 #include <QLabel>
+#include <QRadioButton>
+#include "PropertiesStruct.h"
 
 constexpr int NUMBER_OF_SLIDERS = 6;
 
@@ -21,9 +23,9 @@ class GameView : public QDialog
 
 public:
     explicit GameView(QWidget *parent = nullptr);
-    QGraphicsScene *scene;
-    QSlider* sliders[NUMBER_OF_SLIDERS];
-    QLabel* sLabels[NUMBER_OF_SLIDERS];
+    QString *gameName;
+
+
     QGraphicsTextItem *labels[4]={new QGraphicsTextItem,new QGraphicsTextItem,new QGraphicsTextItem,new QGraphicsTextItem};
     std::vector<QGraphicsItem*>gItems;
     int itemCounter;
@@ -32,18 +34,18 @@ public:
     Ui::GameView *ui;
 
 protected:
+    propertiesStruct properties;
+    QGraphicsScene *scene;
     void setLabel(QSlider* slider,QLabel* label);
+    QSlider* sliders[NUMBER_OF_SLIDERS];
+    QLabel* sLabels[NUMBER_OF_SLIDERS];
+
 
 protected slots:
     void on_horizontalSlider_valueChanged(int value);
 
     virtual void on_editButton_clicked()=0;
 
-
-private:
-
-
-    QGraphicsItem* CopyGraphicsItem(QGraphicsItem* gItem);
 };
 
 #endif // GAMEVIEW_H

@@ -10,7 +10,13 @@ AddGameView::AddGameView(QWidget *parent) :
 
 void AddGameView::on_editButton_clicked()
 {
-
+    properties.name=ui->nameEdit->toPlainText();
+    for(int i=0;i<NUMBER_OF_SLIDERS;i++)
+    {
+        properties.numericVal.push_back(sliders[i]->value());
+    }
+    emit saveGame(properties);
+    this->close();
 }
 
 AddGameView::~AddGameView()

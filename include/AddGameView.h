@@ -22,6 +22,8 @@ class AddGameView : public GameView
 public:
     explicit AddGameView(QWidget *parent = nullptr);
     ~AddGameView();
+signals:
+    void saveGame(propertiesStruct _properties);
 
 protected slots:
     virtual void on_editButton_clicked();

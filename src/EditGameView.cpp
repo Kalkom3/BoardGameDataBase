@@ -9,6 +9,26 @@ EditGameView::EditGameView(QWidget *parent) :
 
 
 
+EditGameView::EditGameView(Game *parentGame,bool* paramSave, QWidget *parent) :
+     GameView(parent)
+{
+    gameName=&parentGame->name;
+    ui->nameEdit->setText(*gameName);
+    saveFlag=paramSave;
+    for(int i=0;i<parentGame->gitem.size();i++)
+    {
+        gItems.push_back(CopyGraphicsItem(parentGame->gitem[i]));
+        scene->addItem(gItems[i]);
+    }
+    for(int i=0;i<parentGame->properties.size();i++)
+    {
+        propertiesPtr.push_back(&parentGame->properties[i]);
+        sliders[i]->setValue(parentGame->properties[i]);
+    }
+}
+
+
+
 EditGameView::EditGameView(std::vector<QGraphicsItem*>gits,std::vector<int>&properties,bool* paramSave, QWidget *parent) :
     GameView(parent)
 {
@@ -72,7 +92,9 @@ void EditGameView::on_editButton_clicked()
     {
         *propertiesPtr[i]=sliders[i]->value();
     }
+    *gameName=ui->nameEdit->toPlainText();
     *saveFlag=true;
+    emit saveChanges();
     this->close();
 }
 

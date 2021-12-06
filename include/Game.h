@@ -13,9 +13,7 @@
 #include <functional>
 #include <QGraphicsScene>
 #include <vector>
-
-#include "EditGameView.h"
-
+#include "PropertiesStruct.h"
 
 
 class Game
@@ -31,11 +29,16 @@ public:
     bool paramChanged;
     int nr;
     static int g_nr;
-
-    void checkParams();
     void openGameView(bool isModal);
     void setNewPos(int nr);
     ~Game();
+private:
+    int pos[2];
+    QImage* image[4];
+    QGraphicsTextItem* labels[4]={new QGraphicsTextItem,new QGraphicsTextItem,new QGraphicsTextItem,new QGraphicsTextItem};
+    QGraphicsPixmapItem* stars[3];
+    void checkParams();
+    void init();
 
 };
 

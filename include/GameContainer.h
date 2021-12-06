@@ -22,7 +22,7 @@ class Game_container : public QObject
     Q_OBJECT
 public:
     Game_container(QGraphicsScene* _scene);
-    QTimer* refTimer;
+
     QGraphicsScene* gScene;
     std::vector<Game*>games;
     std::vector<Game*>gamesToShow;
@@ -36,10 +36,12 @@ public:
     Filters gamesFilter;
     void add_game(Game* game);
     void show();
-
     void hide();
     void applyFilter();
     void gameDetails(Game* gameD);
+
+private:
+    QTimer* refTimer;
 private slots:
     void refGame();
 };

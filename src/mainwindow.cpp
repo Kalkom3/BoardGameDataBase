@@ -1,5 +1,6 @@
 #include "mainwindow.h"
-#include "AddGameView.h"
+
+
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -42,10 +43,24 @@ void MainWindow::init()
     connect(ui->horizontalSlider_3,SIGNAL(valueChanged(int)),this,SLOT(on_horizontalSlider_valueChanged(int)));
     connect(ui->horizontalSlider_4,SIGNAL(valueChanged(int)),this,SLOT(on_horizontalSlider_valueChanged(int)));
     connect(ui->horizontalSlider_5,SIGNAL(valueChanged(int)),this,SLOT(on_horizontalSlider_valueChanged(int)));
-
+    int numberOfTags=0;
+    for(Tag tag : tags)
+    {
+        tagBox.push_back(new QCheckBox(tag.tagName));
+        ui->tagsLayout->addWidget(tagBox[numberOfTags],numberOfTags);
+        connect(tagBox[numberOfTags],SIGNAL(stateChanged(int)),this,SLOT(on_checkBox_stateChanged(int)));
+        numberOfTags++;
+    }
 }
 
 
+void MainWindow::on_checkBox_stateChanged(int state)
+{
+    container->gamesFilter.setTagFilter(tagBox);
+    container->hide();
+    container->applyTagFilter();
+    container->show();
+}
 
 void MainWindow::on_horizontalSlider_valueChanged(int value)
 {

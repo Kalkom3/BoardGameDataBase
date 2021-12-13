@@ -6,17 +6,24 @@
 #include <QString>
 #include <QLabel>
 #include <vector>
+#include <QCheckBox>
 
-#define NUMBER_OF_PROPERTIES 5
+#include "PropertiesStruct.h"
+
+constexpr int NUMBER_OF_PROPERTIES = 5;
 
 class Filters
 {
 public:
 
     Filters();
-    void setFilter(QSlider &slider,QLabel &label);
+    void setFilter(QSlider& slider,QLabel& label);
+    void setTagFilter(std::vector<QCheckBox*>tags);
     void clearFilter(QSlider &slider);
-    int properties[NUMBER_OF_PROPERTIES];
+    int getFilterValue(int nr);
+    std::vector<bool>* getFilterTags();
+private:
+    propertiesStruct properties;
     QString filter_name[NUMBER_OF_PROPERTIES];
 
 };

@@ -23,9 +23,7 @@ class Game_container : public QObject
 public:
     Game_container(QGraphicsScene* _scene);
 
-    QGraphicsScene* gScene;
-    std::vector<Game*>games;
-    std::vector<Game*>gamesToShow;
+
     GameDataBase* db;
     struct proxyButtons
     {
@@ -33,14 +31,17 @@ public:
         int nr;
     };
     std::vector<proxyButtons>gameButtons;
+    std::vector<Game*>games;
     Filters gamesFilter;
     void add_game(Game* game);
     void show();
     void hide();
     void applyFilter();
-    void gameDetails(Game* gameD);
+    void applyTagFilter();
 
 private:
+    QGraphicsScene* gScene;
+    std::vector<Game*>gamesToShow;
     QTimer* refTimer;
 private slots:
     void refGame();

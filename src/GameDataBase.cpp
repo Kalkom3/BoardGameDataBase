@@ -56,10 +56,6 @@ void GameDataBase::GetGames(std::vector<Game>resoult,int com,int rand,int inter,
         command+=addon;
     }
     query.exec(command);
-    while(query.next())
-    {
-        QString name = query.value(0).toString();
-    }
 }
 
 
@@ -67,6 +63,7 @@ std::vector<Game*> GameDataBase::GetAllGames()
 {
     QSqlQuery query;
     int params[6];
+    std::vector<bool>tempTags;
     std::vector<Game*> result;
     query.exec("SELECT * FROM games");
     while(query.next())
@@ -76,8 +73,15 @@ std::vector<Game*> GameDataBase::GetAllGames()
         {
             params[i] = query.value(i+2).toInt();
         }
+        uint32_t sqlTags=query.value(8).toUInt();
+        for(int i=0;i<NUMBER_OF_TAGS;i++)
+        {
+            tempTags.push_back(((sqlTags>>i)&1));
+        }
         propertiesStruct properties;
         properties.name=name;
+        properties.tags=tempTags;
+        tempTags.clear();
         for(int i=0;i<6;i++)
         {
            properties.numericVal.push_back(params[i]);
@@ -92,7 +96,6 @@ std::vector<Game*> GameDataBase::GetAllGames()
 
 void GameDataBase::AddGame(int id,propertiesStruct data)
 {
-    qDebug()<<"add";
     QSqlQuery query;
     QString command;
     command=QString("INSERT INTO games VALUES(%1,\"%2\",%3,%4,%5,%6,%7,%8);")
@@ -104,14 +107,23 @@ void GameDataBase::AddGame(int id,propertiesStruct data)
 }
 
 
-void GameDataBase::ModifyGame(QString name,int id,int com,int rand,int inter,int time,int min_pl,int max_pl)
+void GameDataBase::ModifyGame(int id,propertiesStruct data)
 {
-    qDebug()<<"edit";
     QSqlQuery query;
     QString command;
+    uint32_t sqlTags=0;
+    for(int i=0;i<NUMBER_OF_TAGS;i++)
+    {
+        if(data.tags[i]==true)
+        {
+            sqlTags|=(1<<i);
+        }
+    }
     command=QString("UPDATE games SET game_name=\"%1\", complexity=%2 ,randomness=%3, interaction=%4, "
-            "game_time=%5, min_players=%6, max_palyers=%7 WHERE game_id=%8;").arg(name).arg(com).arg(rand)
-            .arg(inter).arg(time).arg(min_pl).arg(max_pl).arg(id);
+            "game_time=%5, min_players=%6, max_palyers=%7, tags=%8 WHERE game_id=%9;")
+            .arg(data.name).arg(data.numericVal[0]).arg(data.numericVal[1])
+            .arg(data.numericVal[2]).arg(data.numericVal[3]).arg(data.numericVal[4])
+            .arg(data.numericVal[5]).arg(sqlTags).arg(id+1);
     qDebug()<<command;
     query.exec(command);
 }

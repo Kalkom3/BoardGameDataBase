@@ -14,12 +14,8 @@
 #include <QCheckBox>
 #include <QEvent>
 
-#include "PropertiesStruct.h"
 #include "AddGameView.h"
-#include "GameDataBase.h"
 #include "ui_mainwindow.h"
-#include "Game.h"
-#include "Filters.h"
 #include "GameContainer.h"
 
 constexpr int NUMBER_OF_FILTERS = 5;
@@ -48,13 +44,14 @@ private slots:
 
 
     void on_horizontalSlider_valueChanged(int value);
-
+    void on_checkBox_stateChanged(int state);
     void on_clearFiltersButton_clicked();
 
 
     void on_addButton_clicked();
 
 private:
+    std::vector<QCheckBox*>tagBox;
     AddGameView* addGameWindow;
     Game_container* container;
     void init();

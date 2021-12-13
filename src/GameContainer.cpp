@@ -70,7 +70,7 @@ void Game_container::show()
 
 /*!
  * \brief Game_container::hide - Funkcja ukrywa wybrane gry z widoku
- * \param QGraphicsScene - widok
+ *
  */
 void Game_container::hide()
 {
@@ -100,8 +100,7 @@ void Game_container::hide()
 
 
 /*!
- * \brief Game_container::applyFilter - Funkcja włącza działanie fitra na kontenerze
- * \param QGraphicsScene - widok
+ *  Game_container::applyFilter - Funkcja włącza działanie fitra na kontenerze
  */
 void Game_container::applyFilter()
 {
@@ -112,11 +111,11 @@ void Game_container::applyFilter()
         filterOK=true;
         for(int j=0;j<NUMBER_OF_PROPERTIES;j++)
         {
-            if(gamesFilter.properties[j]!=(-1))
+            if(gamesFilter.getFilterValue(j)!=(-1))
             {
                 if(j!=NUMBER_OF_PROPERTIES-1)
                 {
-                    if(games[i]->properties[j]!=gamesFilter.properties[j])
+                    if(games[i]->getProperties().numericVal[j]!=gamesFilter.getFilterValue(j))
                     {
                         filterOK=false;
                         break;
@@ -124,7 +123,8 @@ void Game_container::applyFilter()
                 }
                 else
                 {
-                    if(gamesFilter.properties[j]<games[i]->properties[j] || gamesFilter.properties[j]>games[i]->properties[j+1])
+                    if(gamesFilter.getFilterValue(j)<games[i]->getProperties().numericVal[j] ||
+                            gamesFilter.getFilterValue(j)>games[i]->getProperties().numericVal[j+1])
                     {
                         filterOK=false;
                         break;
@@ -140,6 +140,28 @@ void Game_container::applyFilter()
 }
 
 
+void Game_container::applyTagFilter()
+{
+   gamesToShow.clear();
+   bool filterOK=false;
+   std::vector<bool>tagDemands=*gamesFilter.getFilterTags();
+   for(int i=0;i<games.size();i++)
+   {
+       filterOK=true;
+       for(int j=0;j<NUMBER_OF_TAGS;j++)
+       {
+            if(games[i]->getProperties().tags[j]<tagDemands[j])
+            {
+                filterOK=false;
+            }
+       }
+       if(filterOK==true)
+       {
+           gamesToShow.push_back(games[i]);
+       }
+   }
+}
+
 
 void Game_container::refGame()
 {
@@ -148,7 +170,6 @@ void Game_container::refGame()
     {
         if(gamesToShow[i]->paramChanged==true)
         {
-            qDebug()<<"del";
             gamesToShow[i]->paramChanged=false;
             for(int j=1;j<8;j++)
             {
@@ -160,9 +181,8 @@ void Game_container::refGame()
                 gScene->addItem(gamesToShow[i]->gitem[j]);
 
             }
-            db->ModifyGame(gamesToShow[i]->name,i+1,gamesToShow[i]->properties[0],gamesToShow[i]->properties[1],
-                    gamesToShow[i]->properties[2],gamesToShow[i]->properties[3],gamesToShow[i]->properties[4],
-                    gamesToShow[i]->properties[5]);
+            propertiesStruct newProperties = gamesToShow[i]->getProperties();
+            db->ModifyGame(gamesToShow[i]->nr,newProperties);
             break;
         }
     }

@@ -8,6 +8,7 @@
 
 #include "PropertiesStruct.h"
 #include "Game.h"
+#include "Tags.h"
 
 constexpr int NUMBER_OF_DEMANDS = 5;
 
@@ -18,7 +19,7 @@ public:
 
     QString demandName[NUMBER_OF_DEMANDS];
     void AddGame(int id,propertiesStruct data);
-    void ModifyGame(QString name,int id,int com,int rand,int inter,int time,int min_pl,int max_pl);
+    void ModifyGame(int id,propertiesStruct data);
     void GetGames(std::vector<Game>resoult,int com,int rand,int inter,int time,int players);
     std::vector<Game*> GetAllGames();
     GameDataBase();

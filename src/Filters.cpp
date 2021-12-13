@@ -4,7 +4,7 @@ Filters::Filters()
 {
     for(int i=0;i<NUMBER_OF_PROPERTIES;i++)
     {
-        properties[i]=(-1);
+        properties.numericVal.push_back(-1);
     }
 
     filter_name[0]="Complexity: ";
@@ -14,6 +14,9 @@ Filters::Filters()
     filter_name[4]="Players: ";
 }
 
+/*
+ * Function reading data from sliders to filters
+ */
 void Filters::setFilter(QSlider &slider, QLabel &label)
 {
     QString labelText = label.text();
@@ -31,9 +34,43 @@ void Filters::setFilter(QSlider &slider, QLabel &label)
     {
         if(labelText==filter_name[i])
         {
-            properties[i]=slider.value();
+            properties.numericVal[i]=slider.value();
         }
     }
+}
+
+/*
+ * Function reading data from checkBox to tag filters
+ */
+void Filters::setTagFilter(std::vector<QCheckBox*>tags)
+{
+    for(int i=0;i<tags.size();i++)
+    {
+        if(tags[i]->checkState())
+        {
+            properties.tags.push_back(true);
+        }
+        else
+        {
+            properties.tags.push_back(false);
+        }
+    }
+}
+
+
+
+int Filters::getFilterValue(int nr)
+{
+    if(nr<NUMBER_OF_PROPERTIES)
+    {
+      return properties.numericVal[nr];
+    }
+    return -1;
+}
+
+std::vector<bool>* Filters::getFilterTags()
+{
+    return &properties.tags;
 }
 
 void Filters::clearFilter(QSlider &slider)

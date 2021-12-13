@@ -26,6 +26,7 @@ signals:
     void saveGame(propertiesStruct _properties);
 
 protected slots:
+    virtual void on_delButton_clicked(){};
     virtual void on_editButton_clicked();
 
 private:

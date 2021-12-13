@@ -23,6 +23,14 @@ GameView::GameView(QWidget *parent) :
     sLabels[3]=ui->sLabel4;
     sLabels[4]=ui->sLabel5;
     sLabels[5]=ui->sLabel6;
+    int numberOfTags=0;
+    for(Tag tag : tags)
+    {
+        tagBox.push_back(new QCheckBox(tag.tagName));
+        ui->tagsLayout->addWidget(tagBox[numberOfTags],numberOfTags);
+        numberOfTags++;
+    }
+
     for(int i=0;i<NUMBER_OF_SLIDERS;i++)
     {
         setLabel(sliders[i],sLabels[i]);

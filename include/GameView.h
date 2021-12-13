@@ -8,9 +8,10 @@
 #include <vector>
 #include <QSlider>
 #include <QLabel>
-#include <QRadioButton>
-#include "PropertiesStruct.h"
+#include <QCheckBox>
 
+#include "PropertiesStruct.h"
+#include "Tags.h"
 constexpr int NUMBER_OF_SLIDERS = 6;
 
 namespace Ui {
@@ -23,8 +24,6 @@ class GameView : public QDialog
 
 public:
     explicit GameView(QWidget *parent = nullptr);
-    QString *gameName;
-
 
     QGraphicsTextItem *labels[4]={new QGraphicsTextItem,new QGraphicsTextItem,new QGraphicsTextItem,new QGraphicsTextItem};
     std::vector<QGraphicsItem*>gItems;
@@ -34,6 +33,7 @@ public:
     Ui::GameView *ui;
 
 protected:
+    std::vector<QCheckBox*>tagBox;
     propertiesStruct properties;
     QGraphicsScene *scene;
     void setLabel(QSlider* slider,QLabel* label);
@@ -45,6 +45,7 @@ protected slots:
     void on_horizontalSlider_valueChanged(int value);
 
     virtual void on_editButton_clicked()=0;
+    virtual void on_delButton_clicked()=0;
 
 };
 

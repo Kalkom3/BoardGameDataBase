@@ -1,6 +1,24 @@
 #include "EditGameView.h"
 #include "ui_Gameview.h"
 
+static int intPow(int value,int pow)
+{
+    if(!pow)
+    {
+        return 1;
+    }
+    if(!value)
+    {
+        return 0;
+    }
+    int product=value;
+    for(int i=0;i<pow-1;i++)
+    {
+        product=product*value;
+    }
+    return product;
+}
+
 EditGameView::EditGameView(QWidget *parent) :
     GameView(parent)
 {
@@ -12,49 +30,22 @@ EditGameView::EditGameView(QWidget *parent) :
 EditGameView::EditGameView(Game *parentGame,bool* paramSave, QWidget *parent) :
      GameView(parent)
 {
-    gameName=&parentGame->name;
-    ui->nameEdit->setText(*gameName);
+    gameProperties=&parentGame->getProperties();
+    ui->nameEdit->setText(gameProperties->name);
     saveFlag=paramSave;
     for(int i=0;i<parentGame->gitem.size();i++)
     {
         gItems.push_back(CopyGraphicsItem(parentGame->gitem[i]));
         scene->addItem(gItems[i]);
     }
-    for(int i=0;i<parentGame->properties.size();i++)
+    for(int i=0;i<gameProperties->numericVal.size();i++)
     {
-        propertiesPtr.push_back(&parentGame->properties[i]);
-        sliders[i]->setValue(parentGame->properties[i]);
+        sliders[i]->setValue(gameProperties->numericVal[i]);
     }
-}
-
-
-
-EditGameView::EditGameView(std::vector<QGraphicsItem*>gits,std::vector<int>&properties,bool* paramSave, QWidget *parent) :
-    GameView(parent)
-{
-
-    scene=new QGraphicsScene;
-    ui->graphicsView->setScene(scene);
-    for(int i=0;i<8;i++)
+    for (int i=0;i<NUMBER_OF_TAGS;i++ )
     {
-        gItems.push_back(CopyGraphicsItem(gits[i]));
+        tagBox[i]->setChecked(parentGame->getProperties().tags[i]);
     }
-
-
-    saveFlag=paramSave;
-    for(int i=0;i<gItems.size();i++)
-    {
-        scene->addItem(gItems[i]);
-    }
-
-
-
-    for(int i=0;i<properties.size();i++)
-    {
-        propertiesPtr.push_back(&properties[i]);
-        sliders[i]->setValue(properties[i]);
-    }
-
 
 }
 
@@ -88,15 +79,28 @@ QGraphicsItem* EditGameView::CopyGraphicsItem(QGraphicsItem* gItem)
 
 void EditGameView::on_editButton_clicked()
 {
+
     for(int i=0;i<NUMBER_OF_SLIDERS;i++)
     {
-        *propertiesPtr[i]=sliders[i]->value();
+        gameProperties->numericVal[i]=sliders[i]->value();
     }
-    *gameName=ui->nameEdit->toPlainText();
+    std::vector<bool>tempTags;
+    for(int i=0;i<NUMBER_OF_TAGS;i++)
+    {
+        tempTags.push_back(tagBox[i]->isChecked());
+    }
+    gameProperties->tags=tempTags;
+    gameProperties->name=ui->nameEdit->toPlainText();
     *saveFlag=true;
     emit saveChanges();
     this->close();
 }
+
+void EditGameView::on_delButton_clicked()
+{
+    this->close();
+}
+
 
 EditGameView::~EditGameView()
 {

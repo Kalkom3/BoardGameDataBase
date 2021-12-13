@@ -8,8 +8,11 @@
 struct propertiesStruct
 {
     std::vector<int>numericVal;
+    std::vector<bool>tags;
     QString name;
 };
+
+
 
 
 #endif // PROPERTIESSTRUCT_H

@@ -24,17 +24,17 @@ public:
     QPushButton* activateButton;
     bool isVisible;
     std::vector<QGraphicsItem*>gitem;
-    QString name;
-    std::vector<int>properties;//complexity, randomness, interaction, time, min PL, max PL, name
     bool paramChanged;
     int nr;
     static int g_nr;
+    propertiesStruct& getProperties();
     void openGameView(bool isModal);
     void setNewPos(int nr);
     ~Game();
 private:
     int pos[2];
     QImage* image[4];
+    propertiesStruct gameProperties;
     QGraphicsTextItem* labels[4]={new QGraphicsTextItem,new QGraphicsTextItem,new QGraphicsTextItem,new QGraphicsTextItem};
     QGraphicsPixmapItem* stars[3];
     void checkParams();

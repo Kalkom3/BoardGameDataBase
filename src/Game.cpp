@@ -5,13 +5,8 @@ Game::Game(propertiesStruct _properties)
 {
     nr=g_nr;
     g_nr++;
-    name=_properties.name;
 
-    for(int i=0;i<6;i++)
-    {
-        properties.push_back(_properties.numericVal[i]);
-    }
-
+    gameProperties=_properties;
     init();
 
 
@@ -40,7 +35,7 @@ void Game::init()
     labels[0]->setPlainText("Complexity:");
     labels[1]->setPlainText("Randomness:");
     labels[2]->setPlainText("Interaction:");
-    labels[3]->setPlainText(name);
+    labels[3]->setPlainText(gameProperties.name);
     labels[0]->setPos(pos[0],pos[1]+205);
     labels[1]->setPos(pos[0],pos[1]+260);
     labels[2]->setPos(pos[0],pos[1]+315);
@@ -56,14 +51,14 @@ void Game::init()
     labels[2]->setFont(font);
     labels[3]->setFont(font);
 
-    image[0]= new QImage(fname+"resources/"+name+".jpg");
+    image[0]= new QImage(fname+"resources/"+gameProperties.name+".jpg");
     if(image[0]->isNull())
     {
         image[0]= new QImage(fname+"resources/noIMG.png");
     }
-    image[1]= new QImage(fname+"resources/stars("+(char)(properties[0]+48)+").png");
-    image[2]= new QImage(fname+"resources/stars("+(char)(properties[1]+48)+").png");
-    image[3]= new QImage(fname+"resources/stars("+(char)(properties[2]+48)+").png");
+    image[1]= new QImage(fname+"resources/stars("+(char)(gameProperties.numericVal[0]+48)+").png");
+    image[2]= new QImage(fname+"resources/stars("+(char)(gameProperties.numericVal[1]+48)+").png");
+    image[3]= new QImage(fname+"resources/stars("+(char)(gameProperties.numericVal[2]+48)+").png");
 
     gitem.push_back(new QGraphicsPixmapItem(QPixmap::fromImage(image[0]->scaled(190,190,Qt::KeepAspectRatio))));
     gitem.push_back(new QGraphicsPixmapItem(QPixmap::fromImage(image[1]->scaled(190,50,Qt::KeepAspectRatio))));
@@ -82,6 +77,12 @@ void Game::init()
 
 }
 
+propertiesStruct& Game::getProperties()
+{
+    return gameProperties;
+}
+
+
 void Game::openGameView(bool isModal)
 {
     std::vector<QImage>images;
@@ -91,7 +92,6 @@ void Game::openGameView(bool isModal)
     }
     bool tempParamChanged;
     EditGameView * gameWindow = new EditGameView(this,&tempParamChanged);
-    //connect(gameWindow,&EditGameView::saveChanges,this,[&](){tempParamChanged=true;});
     gameWindow->exec();
     if(tempParamChanged==true)
     {
@@ -104,16 +104,17 @@ void Game::checkParams()
 {
     QString fname = __FILE__;
     fname.chop(12);
-    labels[3]->setPlainText(name);
+    labels[3]->setPlainText(gameProperties.name);
 
     for(int i=0;i<3;i++)
     {
-        QImage* newImg = new QImage(fname+"resources/stars("+(char)(properties[i]+48)+").png");
+        QImage* newImg = new QImage(fname+"resources/stars("+(char)(gameProperties.numericVal[i]+48)+").png");
         delete gitem[i+1];
         gitem[i+1]=new QGraphicsPixmapItem(QPixmap::fromImage(newImg->scaled(190,50,Qt::KeepAspectRatio)));
         gitem[i+1]->setPos(pos[0],pos[1]+220+(i*55));
 
     }
+
     paramChanged=true;
 }
 

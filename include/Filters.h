@@ -19,9 +19,11 @@ public:
     Filters();
     void setFilter(QSlider& slider,QLabel& label);
     void setTagFilter(std::vector<QCheckBox*>tags);
+    void clearTagFilter(QCheckBox &checkBox);
     void clearFilter(QSlider &slider);
     int getFilterValue(int nr);
     std::vector<bool>* getFilterTags();
+
 private:
     propertiesStruct properties;
     QString filter_name[NUMBER_OF_PROPERTIES];

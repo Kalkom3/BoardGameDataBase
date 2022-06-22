@@ -82,6 +82,10 @@ void MainWindow::on_clearFiltersButton_clicked()
     {
         container->gamesFilter.clearFilter(*sliders[i]);
     }
+    for(int i=0;i<NUMBER_OF_TAGS;i++)
+    {
+        container->gamesFilter.clearTagFilter(*tagBox[i]);
+    }
 }
 
 

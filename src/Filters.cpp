@@ -44,15 +44,17 @@ void Filters::setFilter(QSlider &slider, QLabel &label)
  */
 void Filters::setTagFilter(std::vector<QCheckBox*>tags)
 {
+    properties.tags.clear();
+    properties.tags.reserve(tags.size());
     for(int i=0;i<tags.size();i++)
     {
         if(tags[i]->checkState())
         {
-            properties.tags.push_back(true);
+            properties.tags.emplace_back(true);
         }
         else
         {
-            properties.tags.push_back(false);
+            properties.tags.emplace_back(false);
         }
     }
 }
@@ -76,6 +78,11 @@ std::vector<bool>* Filters::getFilterTags()
 void Filters::clearFilter(QSlider &slider)
 {
     slider.setValue(-1);
+}
+
+void Filters::clearTagFilter(QCheckBox &checkBox)
+{
+    checkBox.setChecked(false);
 }
 
 

@@ -30,12 +30,14 @@ private:
 signals:
     void tryLogin(loginCredentials);
 
+public slots:
+    void onLoginSucces();
+    void onLoginFailed(QString);
+
 private slots:
     void onLoginButtonClicked();
     void onOfflineButtonClicked();
     void onAutofillButtonClicked();
-    void onLoginSucces();
-    void onLoginFailed(QString);
 };
 
 #endif // LOGINVIEW_H

@@ -2,12 +2,6 @@
 
 Game_container::Game_container(QGraphicsScene* _scene)
 {
-    db=new GameDataBase;
-    std::vector<Game*>gamesToAdd = db->GetAllGames();
-    for(int i=0;i<gamesToAdd.size();i++)
-    {
-        add_game(gamesToAdd[i]);
-    }
     refTimer = new QTimer;
     connect(refTimer,SIGNAL(timeout()),this,SLOT(refGame()));
     gScene=_scene;
@@ -162,10 +156,31 @@ void Game_container::applyTagFilter()
    }
 }
 
+void Game_container::setDatabase(GameDataBase& database)
+{
+    gamesDatabase = std::make_unique<GameDataBase>(database);
+
+}
+
+void Game_container::loadGames()
+{
+    if(gamesDatabase)
+    {
+        std::vector<Game*>gamesToAdd = gamesDatabase->GetAllGames();
+        for(int i=0;i<gamesToAdd.size();i++)
+        {
+            add_game(gamesToAdd[i]);
+        }
+    }
+    else
+    {
+        qDebug()<<"DDD";
+    }
+}
+
 
 void Game_container::refGame()
 {
-    int params[4];
     for(int i=0;i<gamesToShow.size();i++)
     {
         if(gamesToShow[i]->paramChanged==true)
@@ -175,14 +190,14 @@ void Game_container::refGame()
             {
                 if(j>3)
                 {
-                  gScene->removeItem(gamesToShow[i]->gitem[j]);
+                    gScene->removeItem(gamesToShow[i]->gitem[j]);
                 }
 
                 gScene->addItem(gamesToShow[i]->gitem[j]);
 
             }
             propertiesStruct newProperties = gamesToShow[i]->getProperties();
-            db->ModifyGame(gamesToShow[i]->nr,newProperties);
+            gamesDatabase->ModifyGame(gamesToShow[i]->nr,newProperties);
             break;
         }
     }

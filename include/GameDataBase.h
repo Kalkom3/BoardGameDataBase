@@ -11,19 +11,36 @@
 #include "Tags.h"
 
 constexpr int NUMBER_OF_DEMANDS = 5;
+struct loginCredentials;
 
-class GameDataBase
+class GameDataBase : public QObject
 {
+    Q_OBJECT
 public:
-    QSqlDatabase dataBase;
 
-    QString demandName[NUMBER_OF_DEMANDS];
+    GameDataBase();
+    GameDataBase(const GameDataBase& other);
+    ~GameDataBase();
+
     void AddGame(int id,propertiesStruct data);
     void ModifyGame(int id,propertiesStruct data);
-    void GetGames(std::vector<Game>resoult,int com,int rand,int inter,int time,int players);
+    void GetGames(std::vector<Game>resoult,int com,int rand,int inter,int time,int players);    
+    void ShowLoginDialog();
     std::vector<Game*> GetAllGames();
-    GameDataBase();
-    virtual ~GameDataBase();
+    bool GetIsConnected() const;
+
+signals:
+    void loginSucces();
+    void loginFailed(QString errorMessage);
+
+private slots:
+    void LoginToDB(const loginCredentials&  loginCredentials);
+
+private:
+
+    QString m_demandName[NUMBER_OF_DEMANDS] = {"complexity","randomness","interaction","game_time","players"};
+    bool m_isConnected = false;
+    QSqlDatabase m_dataBase;
 };
 
 #endif // GAMEDATABASE_H

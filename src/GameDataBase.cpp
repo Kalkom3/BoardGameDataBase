@@ -1,23 +1,25 @@
 #include "GameDataBase.h"
+#include "LoginView.h"
 
 GameDataBase::GameDataBase()
 {
-    dataBase = QSqlDatabase::addDatabase("QMYSQL");
-    dataBase.setHostName("localhost");
-    dataBase.setUserName("root");
-    dataBase.setPassword("");
-    dataBase.setDatabaseName("");
-    dataBase.setPort(3306);
-    dataBase.open();
+    m_dataBase = QSqlDatabase::addDatabase("QMYSQL");
+//    m_dataBase.setHostName("localhost");
+//    m_dataBase.setUserName("root");
+//    m_dataBase.setPassword("Patapon3");
+//    m_dataBase.setm_dataBaseName("boardgamesdb");
+//    m_dataBase.setPort(3306);
+//    m_dataBase.open();
 
 
-    demandName[0]="complexity";
-    demandName[1]="randomness";
-    demandName[2]="interaction";
-    demandName[3]="game_time";
-    demandName[4]="players";
 }
 
+GameDataBase::GameDataBase(const GameDataBase& other)
+{
+    m_dataBase = QSqlDatabase::addDatabase("QMYSQL");
+    m_isConnected = other.GetIsConnected();
+
+}
 
 
 void GameDataBase::GetGames(std::vector<Game>resoult,int com,int rand,int inter,int time,int players)
@@ -41,7 +43,7 @@ void GameDataBase::GetGames(std::vector<Game>resoult,int com,int rand,int inter,
             {
                 command+=" AND";
             }
-            QString addon = QString(" %1=%2").arg(demandName[i]).arg(demands[i]);
+            QString addon = QString(" %1=%2").arg(m_demandName[i]).arg(demands[i]);
             command+=addon;
             demandCnt++;
         }
@@ -56,6 +58,35 @@ void GameDataBase::GetGames(std::vector<Game>resoult,int com,int rand,int inter,
         command+=addon;
     }
     query.exec(command);
+}
+
+void GameDataBase::LoginToDB(const loginCredentials& loginCredentials)
+{
+
+    m_dataBase.setHostName(loginCredentials.hostname);
+    m_dataBase.setUserName(loginCredentials.username);
+    m_dataBase.setPassword(loginCredentials.password);
+    m_dataBase.setDatabaseName(loginCredentials.databaseName);
+    m_dataBase.setPort(loginCredentials.port);
+
+    if(m_dataBase.open())
+    {
+        m_isConnected=true;
+        emit loginSucces();
+    }
+    else
+    {
+        emit loginFailed(m_dataBase.lastError().text());
+    }
+}
+
+void GameDataBase::ShowLoginDialog()
+{
+    LoginView loginView;
+    connect(&loginView,&LoginView::tryLogin,this,&GameDataBase::LoginToDB);
+    connect(this, &GameDataBase::loginSucces, &loginView, &LoginView::onLoginSucces);
+    connect(this, &GameDataBase::loginFailed, &loginView, &LoginView::onLoginFailed);
+    loginView.exec();
 }
 
 
@@ -91,6 +122,11 @@ std::vector<Game*> GameDataBase::GetAllGames()
 
     }
     return result;
+}
+
+bool GameDataBase::GetIsConnected() const
+{
+    return m_isConnected;
 }
 
 
@@ -131,5 +167,5 @@ void GameDataBase::ModifyGame(int id,propertiesStruct data)
 
 GameDataBase::~GameDataBase()
 {
-    dataBase.close();
+    m_dataBase.close();
 }

@@ -1,5 +1,6 @@
 #include "mainwindow.h"
-
+#include "ui_mainwindow.h"
+#include "AddGameView.h"
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -10,11 +11,11 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     scene=new QGraphicsScene(this);
     ui->graphicsView->setScene(scene);
-    container = new Game_container(scene);
+
 
     init();
 
-    container->show();
+    //gamesContainer->show();
 
 }
 
@@ -51,26 +52,32 @@ void MainWindow::init()
         connect(tagBox[numberOfTags],SIGNAL(stateChanged(int)),this,SLOT(on_checkBox_stateChanged(int)));
         numberOfTags++;
     }
+    database.ShowLoginDialog();
+    if(database.GetIsConnected())
+    {
+        gamesContainer->setDatabase(database);
+    }
+    gamesContainer->loadGames();
 }
 
 
 void MainWindow::on_checkBox_stateChanged(int state)
 {
-    container->gamesFilter.setTagFilter(tagBox);
-    container->hide();
-    container->applyTagFilter();
-    container->show();
+    gamesContainer->gamesFilter.setTagFilter(tagBox);
+    gamesContainer->hide();
+    gamesContainer->applyTagFilter();
+    gamesContainer->show();
 }
 
 void MainWindow::on_horizontalSlider_valueChanged(int value)
 {
     for(int i=0;i<NUMBER_OF_PROPERTIES;i++)
     {
-        container->gamesFilter.setFilter(*sliders[i],*labels[i]);
+        gamesContainer->gamesFilter.setFilter(*sliders[i],*labels[i]);
     }
-    container->hide();
-    container->applyFilter();
-    container->show();
+    gamesContainer->hide();
+    gamesContainer->applyFilter();
+    gamesContainer->show();
 }
 
 
@@ -80,11 +87,11 @@ void MainWindow::on_clearFiltersButton_clicked()
 {
     for(int i=0;i<NUMBER_OF_FILTERS;i++)
     {
-        container->gamesFilter.clearFilter(*sliders[i]);
+        gamesContainer->gamesFilter.clearFilter(*sliders[i]);
     }
     for(int i=0;i<NUMBER_OF_TAGS;i++)
     {
-        container->gamesFilter.clearTagFilter(*tagBox[i]);
+        gamesContainer->gamesFilter.clearTagFilter(*tagBox[i]);
     }
 }
 
@@ -96,10 +103,10 @@ void MainWindow::on_addButton_clicked()
 {
     AddGameView* addGameDialog = new AddGameView();
     connect(addGameDialog,&AddGameView::saveGame,this,[&](propertiesStruct properties){
-        container->db->AddGame(container->games.size()+1,properties);
+        gamesContainer->gamesDatabase->AddGame(gamesContainer->games.size()+1,properties);
         Game* game=new Game(properties);
-        container->add_game(game);
-        container->show();
+        gamesContainer->add_game(game);
+        gamesContainer->show();
     });
     addGameDialog->exec();
 
